@@ -4,10 +4,10 @@ import Main from './components/Main';
 
 function App() {
   return (
-    <React.Fragment>
+    <>
       <Header/>
       <Main/>
-    </React.Fragment>
+    </>
   );
 }
 
