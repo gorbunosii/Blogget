@@ -21,9 +21,9 @@ export const useToken = (state) => {
     }
   }, [token]);
 
-  const removeToken = () => {
+  const delToken = () => {
     localStorage.removeItem('bearer');
     history.pushState({}, `Blogget`, 'http://localhost:3000/');
   };
-  return [token, removeToken];
+  return [token, delToken];
 };

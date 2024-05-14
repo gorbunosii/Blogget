@@ -1,46 +1,39 @@
-import {useEffect, useState} from 'react';
+import {useState, useContext} from 'react';
 import style from './Auth.module.css';
 import {ReactComponent as LoginIcon} from './img/login.svg';
 import {urlAuth} from '../../../api/auth';
 import {Text} from '../../../UI/Text';
 import PropTypes from 'prop-types';
-import {URL_API} from '../../../api/const';
-import {useAuth} from '../../../hooks/useAuth';
+import {tokenContext} from '../../../context/tokenContext';
+import {authContext} from '../../../context/authContext';
 
-export const Auth = ({token, delToken}) => {
-  const [auth, setAuth] = useState({});
+export const Auth = () => {
+  const {delToken} = useContext(tokenContext);
   const [exitAuth, setExitAuth] = useState(false);
+  const {auth, clearAuth} = useContext(authContext);
 
-  useEffect(() => {
-    if (!token) return;
+  const getOut = () => {
+    setExitAuth(!exitAuth);
+  };
 
-    useAuth(URL_API, token)
-      .then(response => response.json())
-      .then(({name, icon_img: icomImg}) => {
-        const img = icomImg.replace(/\?.*$/, '');
-        setAuth({img, name});
-      })
-      .catch(err => {
-        localStorage.clear();
-        console.log(err);
-        setAuth({});
-      });
-  }, [token]);
+  const logOut = () => {
+    delToken();
+    clearAuth();
+    setExitAuth(false);
+  };
 
   return (
     <div className={style.container}>
       {auth.name ? (
-      <button onClick={() => setExitAuth(!exitAuth)} className={style.btn}>
+      <button onClick={getOut} className={style.btn}>
         <img className={style.img} src={auth.img} />
       </button>) : (
       <Text As='a' className={style.authlink} href={urlAuth}>
         <LoginIcon width={40} height={40}/>
       </Text>
       )}
-      {exitAuth && (<button onClick={() => {
-        delToken(); setAuth({}); setExitAuth(false);
-      }}
-      className={style.logout}>Выйти</button>)}
+      {exitAuth && (<button onClick={logOut}
+        className={style.logout}>Выйти</button>)}
     </div>
   );
 };
