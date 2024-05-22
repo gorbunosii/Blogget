@@ -6,13 +6,15 @@ import {formatDate} from '../../../../utils/formatDate';
 import Author from './Author';
 import Rating from './Rating';
 
+
 export const Post = ({props}) => {
-  console.log(props);
-  const {author, created, title, ups} = props;
+  const {author, created, selftext, title, ups, subreddit, id} = props;
+
   return (
     <li className={style.post}>
       <img className={style.img} src={notphoto} alt={title} />
-      <Author author={author} title={title}></Author>
+      <Author author={author} title={title}
+        subreddit={subreddit} id={id}></Author>
       <Rating ups={ups}></Rating>
       <time className={style.date} dateTime={created}>{formatDate(created)}</time>
     </li>

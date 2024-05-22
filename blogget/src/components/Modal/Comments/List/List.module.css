@@ -1,0 +1,14 @@
+.list {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    margin-bottom: 20px;
+    border-left: 3px solid rgb(88, 50, 214);
+    border-right: 3px solid rgb(88, 50, 214);
+    padding: 3px;
+}
+
+.list:last-child {
+    margin-bottom: 0;
+}
