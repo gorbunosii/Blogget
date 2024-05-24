@@ -1,13 +1,14 @@
 import Header from './components/Header';
 import Main from './components/Main';
+import {Provider} from 'react-redux';
 import {AuthContextProvider} from './context/authContext';
-import {TokenContextProvider} from './context/tokenContext';
 import {NewsBestContextProvider} from './context/postsContext';
 import {CommentsContextProvider} from './context/commentsContext';
+import {store} from './store';
 
 function App() {
   return (
-    <TokenContextProvider>
+    <Provider store={store}>
       <AuthContextProvider>
         <NewsBestContextProvider>
           <CommentsContextProvider>
@@ -16,7 +17,7 @@ function App() {
           </CommentsContextProvider>
         </NewsBestContextProvider>
       </AuthContextProvider>
-    </TokenContextProvider>
+    </Provider>
   );
 }
 

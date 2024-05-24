@@ -1,15 +1,15 @@
-import {useState, useEffect, useContext} from 'react';
+import {useState, useEffect} from 'react';
 import {URL_API} from '../api/const';
-import {tokenContext} from '../context/tokenContext';
+import {getToken} from '../api/token';
 
 export const useCommentsData = (id) => {
   const [comment, setComments] = useState(``);
-  const {token} = useContext(tokenContext);
+  const token = getToken();
 
   useEffect(() => {
     if (comment) return;
 
-    const foo = async () => {
+    const returnRequest = async () => {
       const response = await fetch(`${URL_API}/comments/${id}`, {
         headers: {
           Authorization: `bearer ${token}`
@@ -18,7 +18,7 @@ export const useCommentsData = (id) => {
       const result = await response.json();
       return result;
     };
-    foo().then((response) => {
+    returnRequest().then((response) => {
       setComments(response);
     });
   });

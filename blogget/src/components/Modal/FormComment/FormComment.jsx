@@ -1,16 +1,24 @@
-import React, {useRef} from 'react';
 import style from './FormComment.module.css';
+import {useDispatch, useSelector} from 'react-redux';
+import {updateComment} from '../../../store';
 
 export const FormComment = props => {
-  const textButton = useRef(null);
+  const value = useSelector(state => state.comment);
+  const dispath = useDispatch();
   const handlerSubmit = e => {
     e.preventDefault();
-    console.log(textButton.current.value);
+    console.log(value);
   };
+
+  const handleChange = (e) => {
+    dispath(updateComment(e.target.value));
+  };
+
   return (
     <form onSubmit={handlerSubmit} className={style.container}>
       <label htmlFor="story">Оставить комментарий</label>
-      <textarea ref={textButton} name="story" id="story" rows="5" cols="100"></textarea>
+      <textarea value={value} onChange={handleChange} name="story"
+        id="story" rows="5" cols="100"></textarea>
       <button className={style.btn}>Отправить</button>
     </form>
   );
