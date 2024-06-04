@@ -6,7 +6,7 @@ import {Text} from '../../../UI/Text';
 import PropTypes from 'prop-types';
 import {authContext} from '../../../context/authContext';
 import {useDispatch} from 'react-redux';
-import {deleteToken} from '../../../store';
+import {deleteToken} from '../../../store/tokenReducer';
 
 export const Auth = () => {
   const dispath = useDispatch();

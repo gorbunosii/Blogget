@@ -1,11 +1,13 @@
 import {useState, useEffect} from 'react';
 import {URL_API} from '../api/const';
-import {getToken} from '../api/token';
+import {useDispatch, useSelector} from 'react-redux';
+import {deleteToken} from '../store/tokenReducer';
 
 
 export const useAuth = () => {
   const [auth, setAuth] = useState({});
-  const token = getToken();
+  const token = useSelector(state => state.token.token);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (!token) return;
@@ -29,6 +31,7 @@ export const useAuth = () => {
         localStorage.clear();
         console.log(err);
         setAuth({});
+        dispatch(deleteToken());
       });
   }, [token]);
 
