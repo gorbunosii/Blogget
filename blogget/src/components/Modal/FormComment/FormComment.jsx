@@ -5,6 +5,7 @@ import {updateComment} from '../../../store/commentReducer';
 export const FormComment = props => {
   const value = useSelector(state => state.comment.comment);
   const dispath = useDispatch();
+  
   const handlerSubmit = e => {
     e.preventDefault();
     console.log(value);

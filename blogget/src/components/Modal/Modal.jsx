@@ -7,18 +7,27 @@ import * as ReactDOM from 'react-dom';
 import {useCommentsData} from '../../hooks/useCommentsData';
 import Comments from './Comments';
 import FormComment from './FormComment';
+import {useDispatch} from 'react-redux';
+import {AuthLoader} from '../../UI/Preloader/AuthLoader';
 
 export const Modal = ({id, closeModal}) => {
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
-  const article = useCommentsData(id);
+  const [commentary, loading] = useCommentsData();
   const [comments, setComments] = useState(``);
+  const dispatch = useDispatch();
+
+  dispatch({
+    type: 'UPDATE_ID',
+    id,
+  });
+  console.log(loading);
 
   useEffect(() => {
-    if (article[0]) {
-      setComments(article[0][1].data.children);
+    if (commentary[0]) {
+      setComments(commentary[1].data.children);
     }
-  }, [article]);
+  }, [commentary]);
 
   const handleClick = e => {
     const target = e.target;
@@ -39,10 +48,12 @@ export const Modal = ({id, closeModal}) => {
 
   return ReactDOM.createPortal(
     <div className={style.overlay} ref={overlayRef}>
-      {article[0] && (
+      {loading === 'loading' && (<AuthLoader size={1440}/>)}
+      {loading === 'error' && 'ERROR'}
+      {loading === 'loaded' && commentary[0] && (
         <div className={style.modal}>
           <h2 className={style.title}>
-            {article[0][0].data.children[0].data.title}</h2>
+            {commentary[0].data.children[0].data.title}</h2>
           <div className={style.content}>
             <Markdown options={{
               overrides: {
@@ -53,10 +64,10 @@ export const Modal = ({id, closeModal}) => {
                 }
               }
             }}>
-              {article[0][0].data.children[0].data.selftext}
+              {commentary[0].data.children[0].data.selftext}
             </Markdown></div>
           <p className={style.author}>
-            {article[0][0].data.children[0].data.author}</p>
+            {commentary[0].data.children[0].data.author}</p>
           <FormComment />
           <Comments comments={comments} />
           <button className={style.close}>

@@ -11,10 +11,10 @@ export const Author = ({author, title, id}) => {
       <Text As='a' fontweight='bolt' onClick={() => {
         setIsModalOpen(true);
       }}
-      className={style.linkPost} href="#post">{author}</Text>
+      className={style.linkPost} href="#post">{title}</Text>
     </Text>
     <Text As='a' size={16} tsize={18}
-      color='orange' className={style.linkAuthor} href='#author'>{title}</Text>
+      color='orange' className={style.linkAuthor} href='#author'>{author}</Text>
     {isModalOpen && <Modal id={id}
       closeModal={() => {
         setIsModalOpen(false);

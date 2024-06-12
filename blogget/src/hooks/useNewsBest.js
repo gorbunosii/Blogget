@@ -1,27 +1,16 @@
-import {useState, useEffect} from 'react';
-import {URL_API} from '../api/const';
-import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {postRequestAsync} from '../store/post/postAction';
 
 export const useNewsBest = () => {
-  const [news, setNews] = useState(``);
+  const news = useSelector(state => state.post.news);
   const token = useSelector(state => state.token.token);
+  const loading = useSelector(state => state.auth.loading);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (news) return;
-    fetch(`${URL_API}/best`, {
-      headers: {
-        Authorization: `bearer ${token}`
-      },
-    })
-      .then((response) => {
-        if (response.status === 401) {
-          throw new Error(response.status);
-        }
-        return response.json();
-      })
-      .then((name) => {
-        setNews(name);
-      });
-  });
-  return [news];
+    dispatch(postRequestAsync());
+  }, [token]);
+
+  return [news, loading];
 };

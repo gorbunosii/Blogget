@@ -1,27 +1,16 @@
-import {useState, useEffect} from 'react';
-import {URL_API} from '../api/const';
-import {useSelector} from 'react-redux';
+import {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {commentaryRequestAsync} from '../store/commentary/commentaryAction';
 
-export const useCommentsData = (id) => {
-  const [comment, setComments] = useState(``);
+export const useCommentsData = () => {
+  const commentary = useSelector(state => state.commentary.comment);
   const token = useSelector(state => state.token.token);
+  const loading = useSelector(state => state.commentary.status);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (comment) return;
+    dispatch(commentaryRequestAsync());
+  }, [token]);
 
-    const returnRequest = async () => {
-      const response = await fetch(`${URL_API}/comments/${id}`, {
-        headers: {
-          Authorization: `bearer ${token}`
-        },
-      });
-      const result = await response.json();
-      return result;
-    };
-    returnRequest().then((response) => {
-      setComments(response);
-    });
-  });
-
-  return [comment];
+  return [commentary, loading];
 };

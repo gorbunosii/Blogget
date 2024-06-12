@@ -1,14 +1,14 @@
-import {useContext} from 'react';
+import {useNewsBest} from '../../../hooks/useNewsBest';
 import style from './List.module.css';
-import {newsBest} from '../../../context/postsContext';
 import Post from './Post';
+import {AuthLoader} from '../../../UI/Preloader/AuthLoader';
 
 export const List = props => {
-  const {news} = useContext(newsBest);
+  const [news, loading] = useNewsBest();
 
   return (
     <ul className={style.list}>
-      {news.data && (news.data.children.map((item) =>
+      {loading ? (<AuthLoader size={1360}/>) : news[0] && (news.map((item) =>
         <Post key={item.data.id} props={item.data}></Post>))}
     </ul>
   );
