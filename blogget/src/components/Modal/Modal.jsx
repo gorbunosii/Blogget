@@ -9,8 +9,11 @@ import Comments from './Comments';
 import FormComment from './FormComment';
 import {useDispatch} from 'react-redux';
 import {AuthLoader} from '../../UI/Preloader/AuthLoader';
+import {useNavigate, useParams} from 'react-router-dom';
 
-export const Modal = ({id, closeModal}) => {
+export const Modal = () => {
+  const {id, page} = useParams();
+  const navigate = useNavigate();
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
   const [commentary, loading] = useCommentsData();
@@ -21,7 +24,6 @@ export const Modal = ({id, closeModal}) => {
     type: 'UPDATE_ID',
     id,
   });
-  console.log(loading);
 
   useEffect(() => {
     if (commentary[0]) {
@@ -33,7 +35,7 @@ export const Modal = ({id, closeModal}) => {
     const target = e.target;
     if (target === overlayRef.current || target === buttonRef.current ||
       e.key === 'Escape') {
-      closeModal();
+      navigate(`/category/${page}`);
     }
   };
 
@@ -70,7 +72,9 @@ export const Modal = ({id, closeModal}) => {
             {commentary[0].data.children[0].data.author}</p>
           <FormComment />
           <Comments comments={comments} />
-          <button className={style.close}>
+          <button className={style.close} onClick={() => {
+            navigate(`/category/${page}`);
+          }}>
             <CloseIcon ref={buttonRef} />
           </button>
         </div>

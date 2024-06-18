@@ -10,9 +10,20 @@
     align-items: center;
     gap: 15px;
   }
-  
+
+  .homepage {
+    order: 1;
+    grid-column: 1/4;
+    font-size: 30px;
+    font-weight: normal;
+  }
   
   @media (min-width: 768px) {
+    .homepage {
+      order: 0;
+      grid-column: auto;
+    }
+
     .header {
       padding: 30px;
     }

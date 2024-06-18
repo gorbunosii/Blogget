@@ -1,24 +1,20 @@
-import {useState} from 'react';
 import style from './Author.module.css';
 import {Text} from '../../../../../UI/Text';
-import Modal from '../../../../Modal';
 import PropTypes from 'prop-types';
+import {Link, useParams} from 'react-router-dom';
 export const Author = ({author, title, id}) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const {page} = useParams();
 
   return (<div className={style.content}>
     <Text As='h2' className={style.title}>
-      <Text As='a' fontweight='bolt' onClick={() => {
-        setIsModalOpen(true);
-      }}
-      className={style.linkPost} href="#post">{title}</Text>
+      <Link className={style.linkPost} to={`/category/${page}/post/${id}`}>
+        <Text
+          fontweight='bolt'
+          className={style.linkPost}>{title}</Text>
+      </Link>
     </Text>
     <Text As='a' size={16} tsize={18}
       color='orange' className={style.linkAuthor} href='#author'>{author}</Text>
-    {isModalOpen && <Modal id={id}
-      closeModal={() => {
-        setIsModalOpen(false);
-      }}/>}
     <button className={style.delete} aria-label='удалить/скрыть пост'/>
   </div>);
 };
