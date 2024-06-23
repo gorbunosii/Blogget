@@ -1,67 +1,36 @@
 import {URL_API} from '../../api/const';
 import axios from 'axios';
+import {postSlice} from './postSlice';
+import {createAsyncThunk} from '@reduxjs/toolkit';
 
-export const POST_REQUEST = 'POST_REQUEST';
-export const POST_REQUEST_SUCCESS = 'POST_REQUEST_SUCCESS';
-export const POST_REQUEST_ERROR = 'POST_REQUEST_ERROR';
-export const POST_REQUEST_SUCCESS_AFTER = 'POST_REQUEST_SUCCESS_AFTER';
-export const CHANGE_PAGE = 'CHANGE_PAGE';
+export const postRequestAsync = createAsyncThunk('post/fetch',
+  (newPage, {dispatch, getState}) => {
+    let page = getState().post.page;
+    if (newPage) {
+      page = newPage;
+      dispatch(postSlice.actions.changePage(page));
+    }
 
-export const postRequest = () => ({
-  type: POST_REQUEST,
-});
+    const token = getState().token.token;
+    const after = getState().post.after;
+    const loading = getState().post.loading;
+    const isLast = getState().post.isLast;
 
-export const postRequestSuccess = (data) => ({
-  type: POST_REQUEST_SUCCESS,
-  news: data.children,
-  after: data.after,
-});
+    if (!token || loading || isLast) return;
 
-export const postRequestSuccessAfter = (data) => ({
-  type: POST_REQUEST_SUCCESS_AFTER,
-  news: data.children,
-  after: data.after,
-});
-
-export const postRequestError = (error) => ({
-  type: POST_REQUEST_ERROR,
-  error,
-});
-
-export const changePage = (page) => ({
-  type: CHANGE_PAGE,
-  page,
-});
-
-export const postRequestAsync = (newPage) => (dispatch, getState) => {
-  let page = getState().post.page;
-  if (newPage) {
-    page = newPage;
-    dispatch(changePage(page));
-  }
-
-  const token = getState().token.token;
-  const after = getState().post.after;
-  const loading = getState().post.loading;
-  const isLast = getState().post.isLast;
-
-  if (!token || loading || isLast) return;
-
-  dispatch(postRequest());
-  axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
-    headers: {
-      Authorization: `bearer ${token}`
-    },
-  })
-    .then(({data}) => {
-      if (after) {
-        dispatch(postRequestSuccessAfter(data.data));
-      } else {
-        dispatch(postRequestSuccess(data.data));
-      }
+    axios(`${URL_API}/${page}?limit=10&${after ? `after=${after}` : ''}`, {
+      headers: {
+        Authorization: `bearer ${token}`
+      },
     })
-    .catch(err => {
-      console.log(err);
-      dispatch(postRequestError(err.toString()));
-    });
-};
+      .then(({data}) => {
+        if (after) {
+          dispatch(postSlice.actions.postRequestSuccessAfter(data.data));
+        } else {
+          dispatch(postSlice.actions.postRequestSuccess(data.data));
+        }
+      })
+      .catch((error) => {
+        dispatch(postSlice.actions.postRequestError(error));
+      });
+  });

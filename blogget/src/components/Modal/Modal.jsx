@@ -7,7 +7,6 @@ import * as ReactDOM from 'react-dom';
 import {useCommentsData} from '../../hooks/useCommentsData';
 import Comments from './Comments';
 import FormComment from './FormComment';
-import {useDispatch} from 'react-redux';
 import {AuthLoader} from '../../UI/Preloader/AuthLoader';
 import {useNavigate, useParams} from 'react-router-dom';
 
@@ -16,14 +15,8 @@ export const Modal = () => {
   const navigate = useNavigate();
   const overlayRef = useRef(null);
   const buttonRef = useRef(null);
-  const [commentary, loading] = useCommentsData();
+  const [commentary, loading] = useCommentsData(id);
   const [comments, setComments] = useState(``);
-  const dispatch = useDispatch();
-
-  dispatch({
-    type: 'UPDATE_ID',
-    id,
-  });
 
   useEffect(() => {
     if (commentary[0]) {
