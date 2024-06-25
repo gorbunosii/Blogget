@@ -1,6 +1,5 @@
 import React from 'react';
 import RingLoader from 'react-spinners/RingLoader';
-import style from './AuthLoader.module.css';
 
 export const AuthLoader = ({size}) => (
   <RingLoader size={size}
